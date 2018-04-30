@@ -7,6 +7,13 @@ Authentication for Reddit API requests
    section of wiki at above URL.
 */
 
+/*
+  References
+  1. https://github.com/hortinstein/reddit-user-dump/blob/master/index.js
+  2. https://github.com/anhuynh/reddit-user-stats/blob/master/src/App.js (React)
+  3. 
+*/
+
 import React, { Component } from 'react';
 import SearchBar from './Components/SearchBar';
 
