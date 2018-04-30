@@ -1,0 +1,32 @@
+{
+  "name": "reddit-analyzer",
+  "version": "1.0.0",
+  "description": "React app that works off Reddit API",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test --env=jsdom",
+    "eject": "react-scripts eject"
+  },
+  "devDependencies": {
+    "react-scripts": "0.7.0"
+  },
+  "dependencies": {
+    "access-token": "^0.2.2",
+    "express": "^4.16.2",
+    "jquery": "^3.1.1",
+    "node-fetch": "^2.0.0",
+    "react": "^15.3.2",
+    "react-dom": "^15.3.2"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vkakde/reddit-analyzer.git"
+  },
+  "author": "Maulik Jajal, Megh Vankawala, Pranit Kulkarni, Vishwajeet Kakde",
+  "license": "UNLICENSED",
+  "bugs": {
+    "url": "https://github.com/vkakde/reddit-analyzer/issues"
+  },
+  "homepage": "https://github.com/vkakde/reddit-analyzer#readme"
+}
