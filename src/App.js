@@ -49,14 +49,14 @@ class App extends Component {
     }
   }
 
-  handleSearchSubreddit(searchQuery) {
-    console.log("\nhandleSearchSubreddit!");
+  handleSearchUser(searchQuery) {
+    console.log("\nhandleSearchUser!");
   }
 
   render() {
     return (
       <div className="container">
-        <SearchBar searchSubreddit={this.handleSearchSubreddit.bind(this)} />
+        <SearchBar searchUser={this.handleSearchUser.bind(this)} />
       </div>
     );
   }

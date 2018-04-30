@@ -16,7 +16,7 @@ class SearchBar extends Component {
         searchQuery: this.refs.searchQuery.value,
       }}, function(){
         //console.log(this.state);
-        this.props.searchSubreddit(this.state.searchQuery.searchQuery);
+        this.props.searchUser(this.state.searchQuery.searchQuery);
       });
     }
     e.preventDefault();
@@ -26,7 +26,7 @@ class SearchBar extends Component {
     return (
       <div>
         <div className="container-fluid">
-        <h1>Search for subreddit</h1>
+        <h1>Search for Reddit user</h1>
         </div>
         <form onSubmit={this.handleSubmit.bind(this)}>
           <div>
