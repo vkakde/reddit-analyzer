@@ -16,6 +16,9 @@ Authentication for Reddit API requests
 
 import React, { Component } from 'react';
 import SearchBar from './Components/SearchBar';
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
+
 
 var axios = require("axios");
 var expiresIn = 0;
@@ -30,10 +33,28 @@ class App extends Component {
     };
   }
 
+  generatePDF(){
+
+    const input = document.getElementById('toPrint');
+    html2canvas(input)
+      .then((canvas) => {
+        const imgData = canvas.toDataURL('image/png');
+        const pdf = new jsPDF();
+        pdf.addImage(imgData, 'JPEG', 0, 0);
+        //pdf.save("reddit_report.pdf");
+
+      })
+    ;
+  }
+
+
+
   componentWillMount() {
   }
 
   componentDidMount() {
+    //this.generatePDF();
+
     if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
       axios.request({
         url: "https://www.reddit.com/api/v1/access_token",
@@ -52,8 +73,13 @@ class App extends Component {
         accessToken = res.data.access_token;
         accessTokenTimestamp = Date.now();
         console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
+
       });
+
+      
+
     }
+
   }
 
   handleSearchUser(searchQuery) {
@@ -62,7 +88,7 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div id="toPrint" className="container">
         <SearchBar searchUser={this.handleSearchUser.bind(this)} />
       </div>
     );
