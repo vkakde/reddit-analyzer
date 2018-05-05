@@ -16,7 +16,7 @@ Authentication for Reddit API requests
 
 import React, { Component } from 'react';
 import SearchBar from './Components/SearchBar';
-import UserOverview from './Components/UserOverview';
+import UserAbout from './Components/UserAbout';
 
 var axios = require("axios");
 var API_helper_Reddit = require("./API-helper-reddit.js");
@@ -28,7 +28,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      searchResults_Overview: {}
+      searchResults_About: {}
     };
   }
 
@@ -65,9 +65,9 @@ class App extends Component {
     console.log("\nhandleSearchUser!");
 
     try{
-      var searchResults = await API_helper_Reddit.getUserOverview(searchQuery);
-      this.setState({searchResults_Overview:searchResults.data.data});
-      console.log("Fetched user details: \n"+this.state.searchResults_Overview.name);
+      var searchResults = await API_helper_Reddit.getUserAbout(searchQuery);
+      this.setState({searchResults_About:searchResults.data.data});
+      console.log("Fetched user details: \n"+this.state.searchResults_About.name);
     } catch(error){
       console.log("ERROR: "+error);
     }
@@ -77,7 +77,7 @@ class App extends Component {
     return (
       <div className="container">
         <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
-        <UserOverview userOverviewData={this.state.searchResults_Overview} />
+        <UserAbout userAboutData={this.state.searchResults_About} />
       </div>
     );
   }

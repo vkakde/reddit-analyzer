@@ -3,8 +3,8 @@ var bluebird = require('bluebird');
 var axios = bluebird.promisifyAll(require('axios'));
 
 module.exports = {
-    ///\brief This function fetches a user's overview
-    getUserOverview : function(username) {
+    ///\brief This function fetches a user's About
+    getUserAbout : function(username) {
         return new Promise(async (resolve, reject) => {
             console.log(`Searching for user ${username}, URL: https://www.reddit.com/user/${username}/about/.json`);
             var response = await axios.get(`https://www.reddit.com/user/${username}/about/.json`);
