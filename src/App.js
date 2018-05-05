@@ -16,8 +16,10 @@ Authentication for Reddit API requests
 
 import React, { Component } from 'react';
 import SearchBar from './Components/SearchBar';
+import UserOverview from './Components/UserOverview';
 
 var axios = require("axios");
+var API_helper_Reddit = require("./API-helper-reddit.js");
 var expiresIn = 0;
 var accessToken = '';
 var accessTokenTimestamp = 0;
@@ -26,7 +28,7 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      accessToken
+      searchResults_Overview: {}
     };
   }
 
@@ -34,6 +36,8 @@ class App extends Component {
   }
 
   componentDidMount() {
+    ///\remark Access token not required as yet - hence code below commented out
+    /*
     if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
       axios.request({
         url: "https://www.reddit.com/api/v1/access_token",
@@ -54,16 +58,26 @@ class App extends Component {
         console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
       });
     }
+    */
   }
 
-  handleSearchUser(searchQuery) {
+  async handleSearchUser(searchQuery) {
     console.log("\nhandleSearchUser!");
+
+    try{
+      var searchResults = await API_helper_Reddit.getUserOverview(searchQuery);
+      this.setState({searchResults_Overview:searchResults.data.data});
+      console.log("Fetched user details: \n"+this.state.searchResults_Overview.name);
+    } catch(error){
+      console.log("ERROR: "+error);
+    }
   }
 
   render() {
     return (
       <div className="container">
-        <SearchBar searchUser={this.handleSearchUser.bind(this)} />
+        <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
+        <UserOverview userOverviewData={this.state.searchResults_Overview} />
       </div>
     );
   }
