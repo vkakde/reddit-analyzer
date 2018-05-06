@@ -7,7 +7,7 @@ let transporter = nodemailer.createTransport({
     secure: false, // true for 465, false for other ports
     auth: {
         user: 'apikey', 
-        pass: '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'
+        pass: '<API KEY IS IN OUR GOOGLE KEEP ACCOUNT>' 
     }
 });
 
