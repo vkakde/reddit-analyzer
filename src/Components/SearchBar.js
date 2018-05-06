@@ -15,7 +15,6 @@ class SearchBar extends Component {
       this.setState({searchQuery:{
         searchQuery: this.refs.searchQuery.value,
       }}, function(){
-        //console.log(this.state);
         this.props.searchUser(this.state.searchQuery.searchQuery);
       });
     }
@@ -44,7 +43,7 @@ class SearchBar extends Component {
 }
 
 SearchBar.propTypes = {
-  searchBar: React.PropTypes.func
+  searchUser: React.PropTypes.func
 }
 
 export default SearchBar;
