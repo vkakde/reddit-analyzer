@@ -21,6 +21,7 @@ import jsPDF from 'jspdf'
 
 //var smtpServer = require('./my_smtp')
 import UserAbout from './Components/UserAbout';
+import UserOverview from './Components/UserOverview';
 
 var axios = require("axios");
 var API_helper_Reddit = require("./API-helper-reddit.js");
@@ -32,12 +33,12 @@ class App extends Component {
   constructor() {
     super();
     this.state = {
-      searchResults_About: {}
+      userAbout: {},
+      userComments: []
     };
   }
 
   generatePDF(){
-
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
     html2canvas(input)
       .then((canvas) => {
@@ -45,9 +46,7 @@ class App extends Component {
         const pdf = new jsPDF();
         pdf.addImage(imgData, 'JPEG', 0, 0);
         //pdf.save("reddit_report.pdf");
-
-      })
-    ;
+      });
   }
 
   /*async sendEmail() {
@@ -60,7 +59,6 @@ class App extends Component {
         //res.json({ error: e.message });
     }
   }*/
-
 
   componentWillMount() {
   }
@@ -88,9 +86,6 @@ class App extends Component {
         console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
 
       });
-
-      
-
     }
     */
   }
@@ -99,9 +94,13 @@ class App extends Component {
     console.log("\nhandleSearchUser!");
 
     try{
-      var searchResults = await API_helper_Reddit.getUserAbout(searchQuery);
-      this.setState({searchResults_About:searchResults.data.data});
-      console.log("Fetched user details: \n"+this.state.searchResults_About.name);
+      // fetch user's About and set state
+      var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
+      this.setState({userAbout:searchResults_userAbout.data.data});
+
+      // fetch user's Overview (comments history) and set state
+      var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
+      this.setState({userComments:searchResults_userComments.data.data.children});
     } catch(error){
       console.log("ERROR: "+error);
     }
@@ -111,7 +110,10 @@ class App extends Component {
     return (
       <div className="container">
         <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
-        <UserAbout userAboutData={this.state.searchResults_About} />
+        <br/>
+        <UserAbout userAboutData={this.state.userAbout} />
+        <br/>
+        <UserOverview userOverviewData_Comments={this.state.userComments} />
       </div>
     );
   }
