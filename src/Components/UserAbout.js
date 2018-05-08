@@ -9,9 +9,8 @@ class UserAbout extends Component {
   }
 
   render() {
-    console.log("Recieved object: "+this.props.userAboutData.name);
     return (
-      <div className="col-sm-12 col-md-6 col-lg-6">
+      <div className="col-sm-12 col-md-12 col-lg-12">
         <div className="card text-center">
           <div className="card-header">User About</div>
           <div><img height="270" width="270" src={this.props.userAboutData.icon_img} alt="Unavailable" /></div>
