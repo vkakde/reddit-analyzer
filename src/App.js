@@ -96,7 +96,10 @@ class App extends Component {
       // fetch user's About and set state
       var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
       this.setState({ userAbout: searchResults_userAbout.data.data });
-
+    } catch (error) {
+      alert(`No reddit user by the name of ${searchQuery}!`);
+    }
+    try {
       // fetch user's comments and set state
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
       this.setState({ userComments: searchResults_userComments });

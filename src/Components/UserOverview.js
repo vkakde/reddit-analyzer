@@ -17,7 +17,6 @@ class UserOverview extends Component {
                             <li>Total Comments: {this.props.userOverviewData_Comments.length}</li>
                             <li>Total Posts: {this.props.userOverviewData_Posts.length}</li>
                         </ul>
-
                     </div>
                     <br />
                 </div>
