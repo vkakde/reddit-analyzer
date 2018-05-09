@@ -11,7 +11,7 @@ class UserOverview extends Component {
         return (
             <div className="col-sm-12 col-md-12 col-lg-12">
                 <div className="card text-center">
-                    <div className="card-header">User Overview - Comments</div>
+                    <div className="card-header">User Overview - Posts and Comments</div>
                     <div className="card-text">
                         <ul>
                             <li>Total Comments: {this.props.userOverviewData_Comments.length}</li>
