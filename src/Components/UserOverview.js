@@ -18,7 +18,6 @@ class UserOverview extends Component {
                             <li>Most Upvotes for a comment: {this.props.userOverviewData_Upvotes}</li>
                             <li>Total Posts: {this.props.userOverviewData_Posts.length}</li>
                         </ul>
-
                     </div>
                     <br />
                 </div>

@@ -8,13 +8,14 @@ module.exports = {
     ///\brief This function fetches a user's About
     getUserAbout: function (username) {
         return new Promise(async (resolve, reject) => {
-            console.log(`Searching for user ${username}, URL: https://www.reddit.com/user/${username}/about/.json`);
-            var response = await axios.get(`https://www.reddit.com/user/${username}/about/.json`);
-            console.log(response)
-            if (response) {
-                resolve(response);
+            try {
+                console.log(`Searching for user ${username}, URL: https://www.reddit.com/user/${username}/about/.json`);
+                var response = await axios.get(`https://www.reddit.com/user/${username}/about/.json`);
+            } catch (error) {
+                console.log("User not found")
+                reject(new Error("Failed to fetch data"));
             }
-            reject(new Error("Failed to fetch data"));
+            resolve(response);
         });
     },
 
