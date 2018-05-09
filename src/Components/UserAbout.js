@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 //import PropTypes from 'prop-types';
 //import moment from 'moment';
 
-import './UserAbout.css';
+import '../../public/css/UserAbout.css';
 class UserAbout extends Component {
   constructor() {
     super();
@@ -10,11 +10,12 @@ class UserAbout extends Component {
       userAboutData: {}
     }
   }
-    render() {
-    console.log("Recieved object: "+this.props.userAboutData.name);
+
+  render() {
+    console.log("Recieved object: " + this.props.userAboutData.name);
     return (
       <div className="user-info">
-          <h2>User Profile</h2>
+        <h2>User Profile</h2>
         <div className="card text-center">
           <br />
           <div className="user-img"><img height="270" width="270" src={this.props.userAboutData.icon_img} role="presentation" /></div>
@@ -28,8 +29,8 @@ class UserAbout extends Component {
 }
 
 UserAbout.propTypes =
-    {
-  userAboutData: React.PropTypes.object,
-}
+  {
+    userAboutData: React.PropTypes.object,
+  }
 
 export default UserAbout;
