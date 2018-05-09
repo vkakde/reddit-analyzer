@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+//import PropTypes from 'prop-types';
+//import moment from 'moment';
 
+import './UserAbout.css';
 class UserAbout extends Component {
   constructor() {
     super();
@@ -7,14 +10,16 @@ class UserAbout extends Component {
       userAboutData: {}
     }
   }
-
-  render() {
+    render() {
+    console.log("Recieved object: "+this.props.userAboutData.name);
     return (
-      <div className="col-sm-12 col-md-12 col-lg-12">
+      <div className="user-info">
+          <h2>User Profile</h2>
         <div className="card text-center">
-          <div className="card-header">User About</div>
-          <div><img height="270" width="270" src={this.props.userAboutData.icon_img} alt="Unavailable" /></div>
-          <div className="card-text">Name: {this.props.userAboutData.name}</div>
+          <br />
+          <div className="user-img"><img height="270" width="270" src={this.props.userAboutData.icon_img} role="presentation" /></div>
+          <br />
+          <div className="card-text">{this.props.userAboutData.name}</div>
           <br />
         </div>
       </div>
@@ -22,8 +27,9 @@ class UserAbout extends Component {
   }
 }
 
-UserAbout.propTypes = {
-  userAboutData: React.PropTypes.object
+UserAbout.propTypes =
+    {
+  userAboutData: React.PropTypes.object,
 }
 
 export default UserAbout;

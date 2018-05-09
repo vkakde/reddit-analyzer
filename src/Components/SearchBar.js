@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import './styles.css';
+
 
 class SearchBar extends Component {
   constructor(){
@@ -7,14 +9,17 @@ class SearchBar extends Component {
       newSearch:{}
     }
   }
+    handleKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            this.handleSubmit();
+        }
+    }
 
-  handleSubmit(e){
+    handleSubmit(e){
     if(this.refs.searchQuery.value === ''){
       alert('Cannot search for empty search query!');
     } else {
-      this.setState({searchQuery:{
-        searchQuery: this.refs.searchQuery.value,
-      }}, function(){
+      this.setState({searchQuery:{searchQuery: this.refs.searchQuery.value,}}, function(){
         this.props.searchUser(this.state.searchQuery.searchQuery);
       });
     }
@@ -23,20 +28,21 @@ class SearchBar extends Component {
 
   render() {
     return (
-      <div>
-        <div className="container-fluid">
-        <h1>Search for Reddit user</h1>
+      <div className="container-fluid">
+        <div>
+        <h1>Search Reddit User</h1>
         </div>
-        <form onSubmit={this.handleSubmit.bind(this)}>
           <div>
-            <input size="70" placeholder="Search..." type="text" ref="searchQuery" />
+            <div className='pre-input'>
+              <span>/u/</span>
+            </div>
+            <input size="70" placeholder="Username" aria-label="Username" type="text" ref="searchQuery" className="userInput"
+                   onKeyPress={this.handleKeyPress }  />
+            <button className="btn btn-primary" onClick={this.handleSubmit.bind(this)}>
+              Search
+            </button>
           </div>
           <br />
-          <button type="submit" className="btn btn-primary">
-            Search
-          </button>
-          <br />
-        </form>
       </div>
     );
   }

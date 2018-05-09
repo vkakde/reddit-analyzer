@@ -9,50 +9,53 @@ Authentication for Reddit API requests
 
 /*
   References
-  1. https://github.com/hortinstein/reddit-user-dump/
-  2. https://github.com/anhuynh/reddit-user-stats/
+  1. https://github.com/hortinstein/reddit-user-dump/blob/master/index.js
+  2. https://github.com/anhuynh/reddit-user-stats/blob/master/src/App.js (React)
   3. 
 */
 
 import React, { Component } from 'react';
 import SearchBar from './Components/SearchBar';
-import html2canvas from 'html2canvas'
-import jsPDF from 'jspdf'
-
-//var smtpServer = require('./my_smtp')
 import UserAbout from './Components/UserAbout';
 import UserOverview from './Components/UserOverview';
 
-var axios = require("axios");
+import logo from './Reddit.png';
+import './app.css';
+
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
+
+
+//var axios = require("axios");
 var API_helper_Reddit = require("./API-helper-reddit.js");
-var expiresIn = 0;
-var accessToken = '';
-var accessTokenTimestamp = 0;
+//var expiresIn = 0;
+//var accessToken = '';
+//var accessTokenTimestamp = 0;
 
 class App extends Component {
-  constructor() {
-    super();
-    this.state = {
-      userAbout: {},
-      userComments: [],
-      userPosts: [],
-      most_upvotes: 0
-    };
-  }
-
-  generatePDF() {
-    const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
-    html2canvas(input)
-      .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        pdf.addImage(imgData, 'JPEG', 0, 0);
-        //pdf.save("reddit_report.pdf");
-      });
-  }
+    constructor() {
+        super();
+        this.state = {
+            userAbout: {},
+            userComments: [],
+            userPosts: [],
+        };
+    }
 
 
-  componentWillMount() {
+    generatePDF(){
+        const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
+        html2canvas(input)
+            .then((canvas) => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdf = new jsPDF();
+                pdf.addImage(imgData, 'JPEG', 0, 0);
+                //pdf.save("reddit_report.pdf");
+            });
+    }
+
+
+    componentWillMount() {
   }
 
   componentDidMount() {
@@ -76,51 +79,57 @@ class App extends Component {
         accessToken = res.data.access_token;
         accessTokenTimestamp = Date.now();
         console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
-
       });
     }
     */
   }
 
-  async handleSearchUser(searchQuery) {
-    try {
-      // fetch user's About and set state
-      var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
-      this.setState({ userAbout: searchResults_userAbout.data.data });
-    } catch (error) {
-      alert(`No reddit user by the name of ${searchQuery}!`);
-    }
-    try {
-      // fetch user's comments and set state
-      var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
-      this.setState({ userComments: searchResults_userComments });
 
-      var most_upvotes = 0;
-      searchResults_userComments.forEach(element => {
-        if(element.data.ups > most_upvotes)
-          most_upvotes = element.data.ups
-      });
-      console.log("Most upvotes are "+most_upvotes)
-      this.setState({ most_upvotes: most_upvotes})
-      // fetch user's posts and set state
-      var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
-      this.setState({ userPosts: searchResults_userPosts });
-    } catch (error) {
-      console.log("ERROR: " + error);
-    }
-  }
+    async handleSearchUser(searchQuery) {
+        console.log("\nhandleSearchUser!");
 
-  render() {
+        try {
+            // fetch user's About and set state
+            var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
+            this.setState({ userAbout: searchResults_userAbout.data.data });
+        }
+        catch (error)
+        {
+            alert(`No reddit user by the name of ${searchQuery}!`);
+        }
+        try {
+            // fetch user's comments and set state
+            var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
+            this.setState({ userComments: searchResults_userComments });
+
+            var most_upvotes = 0;
+            searchResults_userComments.forEach(element => {
+                if(element.data.ups > most_upvotes)
+                    most_upvotes = element.data.ups
+            });
+            console.log("Most upvotes are "+most_upvotes)
+            this.setState({ most_upvotes: most_upvotes})
+            // fetch user's posts and set state
+            var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
+            this.setState({ userPosts: searchResults_userPosts });
+        } catch (error) {
+            console.log("ERROR: " + error);
+        }
+
+    }
+
+
+    render() {
     return (
       <div className="container">
-        <SearchBar searchUser={this.handleSearchUser.bind(this)} />
-        <br />
-        <UserAbout userAboutData={this.state.userAbout} />
-        <br />
-        <UserOverview 
-          userOverviewData_Comments={this.state.userComments} 
-          userOverviewData_Posts={this.state.userPosts} 
-          userOverviewData_Upvotes={this.state.most_upvotes}/>
+        <div className="logo"><img src={logo}  alt='logo' /></div>
+        <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
+        <UserAbout userAboutData={this.state. userAbout} />
+          <UserOverview
+              userOverviewData_Comments={this.state.userComments}
+              userOverviewData_Posts={this.state.userPosts}
+              userOverviewData_Upvotes={this.state.most_upvotes}/>
+
       </div>
     );
   }
