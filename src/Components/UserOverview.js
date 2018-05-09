@@ -6,6 +6,8 @@ class UserOverview extends Component {
         this.state = {
         }
     }
+
+
     render() {
         return (
             <div className="user-info">
@@ -19,7 +21,7 @@ class UserOverview extends Component {
                             <span>Comments</span>
                         </div>
                         <div className="user-circle">
-                            <div className="comment-info">{this.props.userOverviewData_Upvotes}</div>
+                            <div className="comment-info">{this.props.userOverviewData_most_upvoted_comment.ups}</div>
                             <span>Most Upvotes</span>
                         </div >
                         <div className="user-circle">
@@ -29,18 +31,29 @@ class UserOverview extends Component {
                     </div>
                     <br />
                     <div className="user-row">
+                        
                         <div className="user-circle">
-                            <div className="comment-info">{this.props.userOverviewData_Comments.length}</div>
-                            <span>Comments</span>
-                        </div>
-                        <div className="user-circle">
-                            <div className="comment-info">{this.props.userOverviewData_Upvotes}</div>
+                            <div className="comment-info">{this.props.userOverviewData_most_upvoted_comment.ups}</div>
                             <span>Most Upvotes</span>
                         </div >
-                        <div className="user-circle">
-                            <div className="comment-info">{this.props.userOverviewData_Posts.length}</div>
-                            <span>Total Posts</span>
+                        <div>
+                          <div>{this.props.userOverviewData_most_upvoted_comment.body}</div>
                         </div>
+                        <div>
+                          </div>
+                    </div>
+
+                    <div className="user-row">
+                        
+                        <div className="user-circle">
+                            <div className="comment-info">{this.props.userOverviewData_most_downvoted_comment.downs}</div>
+                            <span>Most Downvotes</span>
+                        </div >
+                        <div>
+                          <div>{this.props.userOverviewData_most_downvoted_comment.body}</div>
+                        </div>
+                        <div>
+                          </div>
                     </div>
                 </div>
             </div>
@@ -51,7 +64,7 @@ class UserOverview extends Component {
 UserOverview.propTypes = {
     userOverviewData_Comments: React.PropTypes.array,
     userOverviewData_Posts: React.PropTypes.array,
-    userOverviewData_Upvotes: React.PropTypes.array
+   // userOverviewData_Upvotes: React.PropTypes.array
 }
 
 export default UserOverview;
