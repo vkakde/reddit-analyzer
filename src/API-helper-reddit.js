@@ -24,7 +24,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             var response = await axios.get(`https://www.reddit.com/user/${username}/comments.json?limit=100&after=${after}`);
             let data = response.data.data.children;
-            console.log("The comment obj is "+JSON.stringify(data))
+            
             if (data.length < 100) {
                 resolve(data);
             }
@@ -40,7 +40,7 @@ module.exports = {
         });
     },
 
-    getUserUpvoted: function (username) {
+    /*getUserUpvoted: function (username) {
         return new Promise(async(resolve, reject) => {
 
             var response = await axios.get(`https://www.reddit.com/user/${username}/overview/.json`);
@@ -52,5 +52,5 @@ module.exports = {
                 reject(new Error("Failed to fetch upvotes")) 
 
         })
-    }
+    }*/
 }

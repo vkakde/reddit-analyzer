@@ -9,8 +9,8 @@ Authentication for Reddit API requests
 
 /*
   References
-  1. https://github.com/hortinstein/reddit-user-dump/blob/master/index.js
-  2. https://github.com/anhuynh/reddit-user-stats/blob/master/src/App.js (React)
+  1. https://github.com/hortinstein/reddit-user-dump/
+  2. https://github.com/anhuynh/reddit-user-stats/
   3. 
 */
 
@@ -34,11 +34,12 @@ class App extends Component {
     super();
     this.state = {
       userAbout: {},
-      userComments: []
+      userComments: [],
+      userPosts: []
     };
   }
 
-  generatePDF(){
+  generatePDF() {
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
     html2canvas(input)
       .then((canvas) => {
@@ -91,27 +92,32 @@ class App extends Component {
   }
 
   async handleSearchUser(searchQuery) {
-    try{
+    try {
       // fetch user's About and set state
       var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
-      this.setState({userAbout:searchResults_userAbout.data.data});
+      this.setState({ userAbout: searchResults_userAbout.data.data });
 
-      // fetch user's Overview (comments history) and set state
+      // fetch user's comments and set state
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
-      this.setState({userComments:searchResults_userComments});
-    } catch(error){
-      console.log("ERROR: "+error);
+      this.setState({ userComments: searchResults_userComments });
+
+      console.log("Upvotes for 2nd comment are "+searchResults_userComments[1].data.ups)
+      // fetch user's posts and set state
+      var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
+      this.setState({ userPosts: searchResults_userPosts });
+    } catch (error) {
+      console.log("ERROR: " + error);
     }
   }
 
   render() {
     return (
       <div className="container">
-        <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
-        <br/>
+        <SearchBar searchUser={this.handleSearchUser.bind(this)} />
+        <br />
         <UserAbout userAboutData={this.state.userAbout} />
-        <br/>
-        <UserOverview userOverviewData_Comments={this.state.userComments} />
+        <br />
+        <UserOverview userOverviewData_Comments={this.state.userComments} userOverviewData_Posts={this.state.userPosts} />
       </div>
     );
   }
