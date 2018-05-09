@@ -106,9 +106,9 @@ class App extends Component {
             var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
             this.setState({ userComments: searchResults_userComments });
 
-            var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
+            /*var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
             var most_upvoted_comment = {}
-            var most_downvoted_comment = {}
+            var most_downvoted_comment = searchResults_userComments[0].data
 
             searchResults_userComments.forEach(element => {
                 if(element.data.ups > most_upvotes){
@@ -118,12 +118,15 @@ class App extends Component {
                 
                 if(element.data.downs < most_downvotes){
                   most_downvotes = element.data.downs
+                  console.log("Downvotes was updated with "+most_downvotes)
                   most_downvoted_comment = element.data
                 }
             });
-            console.log("Most downvotes are "+most_downvotes)
-            this.setState({ mostUpvotedComment: most_upvoted_comment})
-            this.setState({ mostDownvotedComment: most_downvoted_comment})
+            console.log("Most downvotes are "+most_downvotes)*/
+
+            var commentStats = API_helper_Reddit.getCommentsStats(searchResults_userComments)
+            this.setState({ mostUpvotedComment: commentStats.upvoted})
+            this.setState({ mostDownvotedComment:commentStats.downvoted})
             // fetch user's posts and set state
             var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
             this.setState({ userPosts: searchResults_userPosts });

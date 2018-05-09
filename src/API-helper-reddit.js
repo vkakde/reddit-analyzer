@@ -58,5 +58,29 @@ module.exports = {
                 reject(new Error("Data fetch failed (Posts)"));
             }
         });
+    },
+
+    // Scans for the most upvotes to most downvotes in just one loop O(n)
+    getCommentsStats: function(userComments){
+
+        var most_upvotes = 0,most_downvotes = userComments[0].data.downs;
+        var most_upvoted_comment = {}
+        var most_downvoted_comment = userComments[0].data
+
+        userComments.forEach(element => {
+                if(element.data.ups > most_upvotes){
+                    most_upvotes = element.data.ups
+                    most_upvoted_comment = element.data
+                }
+                
+                if(element.data.downs < most_downvotes){
+                  most_downvotes = element.data.downs
+                  console.log("Downvotes was updated with "+most_downvotes)
+                  most_downvoted_comment = element.data
+                }
+        });
+        console.log("Most downvotes are "+most_downvotes)
+
+        return {upvoted: most_upvoted_comment, downvoted: most_downvoted_comment}
     }
 }
