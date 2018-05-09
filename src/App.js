@@ -91,8 +91,6 @@ class App extends Component {
   }
 
   async handleSearchUser(searchQuery) {
-    console.log("\nhandleSearchUser!");
-
     try{
       // fetch user's About and set state
       var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
@@ -100,7 +98,7 @@ class App extends Component {
 
       // fetch user's Overview (comments history) and set state
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
-      this.setState({userComments:searchResults_userComments.data.data.children});
+      this.setState({userComments:searchResults_userComments});
     } catch(error){
       console.log("ERROR: "+error);
     }
