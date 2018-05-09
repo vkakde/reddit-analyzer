@@ -35,7 +35,8 @@ class App extends Component {
     this.state = {
       userAbout: {},
       userComments: [],
-      userPosts: []
+      userPosts: [],
+      most_upvotes: 0
     };
   }
 
@@ -50,16 +51,6 @@ class App extends Component {
       });
   }
 
-  /*async sendEmail() {
-    try{
-      console.log("Calling send email func")
-
-      smtpServer.sendEmail()
-
-    }catch(e){
-        //res.json({ error: e.message });
-    }
-  }*/
 
   componentWillMount() {
   }
@@ -101,7 +92,13 @@ class App extends Component {
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
       this.setState({ userComments: searchResults_userComments });
 
-      console.log("Upvotes for 2nd comment are "+searchResults_userComments[1].data.ups)
+      var most_upvotes = 0;
+      searchResults_userComments.forEach(element => {
+        if(element.data.ups > most_upvotes)
+          most_upvotes = element.data.ups
+      });
+      console.log("Most upvotes are "+most_upvotes)
+      this.setState({ most_upvotes: most_upvotes})
       // fetch user's posts and set state
       var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
       this.setState({ userPosts: searchResults_userPosts });
@@ -117,7 +114,10 @@ class App extends Component {
         <br />
         <UserAbout userAboutData={this.state.userAbout} />
         <br />
-        <UserOverview userOverviewData_Comments={this.state.userComments} userOverviewData_Posts={this.state.userPosts} />
+        <UserOverview 
+          userOverviewData_Comments={this.state.userComments} 
+          userOverviewData_Posts={this.state.userPosts} 
+          userOverviewData_Upvotes={this.state.most_upvotes}/>
       </div>
     );
   }

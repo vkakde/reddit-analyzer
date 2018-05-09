@@ -15,6 +15,7 @@ class UserOverview extends Component {
                     <div className="card-text">
                         <ul>
                             <li>Total Comments: {this.props.userOverviewData_Comments.length}</li>
+                            <li>Most Upvotes for a comment: {this.props.userOverviewData_Upvotes}</li>
                             <li>Total Posts: {this.props.userOverviewData_Posts.length}</li>
                         </ul>
 
