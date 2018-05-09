@@ -37,5 +37,27 @@ module.exports = {
                 reject(new Error("Data fetch failed (Comments)"));
             }
         });
+    },
+
+    ///\brief This function fetches a user's entire post history
+    ///\remark Fetching is done recursively. Only 100 posts can be fetched at a go.
+    getUserPosts: function (username, after = '') {
+        return new Promise(async (resolve, reject) => {
+            var response = await axios.get(`https://www.reddit.com/user/${username}/submitted.json?limit=100&after=${after}`);
+            let data = response.data.data.children;
+
+            if (data.length < 100) {
+                resolve(data);
+            }
+
+            else if (data.length === 100) {
+                // recursively fetch user's entire post history
+                resolve(data.concat(await this.getUserPosts(username, data[99].data.name)));
+            }
+
+            else {
+                reject(new Error("Data fetch failed (Posts)"));
+            }
+        });
     }
 }
