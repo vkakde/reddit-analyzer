@@ -8,6 +8,7 @@ module.exports = {
         return new Promise(async (resolve, reject) => {
             console.log(`Searching for user ${username}, URL: https://www.reddit.com/user/${username}/about/.json`);
             var response = await axios.get(`https://www.reddit.com/user/${username}/about/.json`);
+            console.log(response)
             if (response) {
                 resolve(response);
             }
@@ -19,12 +20,14 @@ module.exports = {
     getUserComments: function (username, after = '') {
         return new Promise(async (resolve, reject) => {
             var response = await axios.get(`https://www.reddit.com/user/${username}/comments.json?limit=100&after=${after}`);
-            let data = response.data.data.children;
 
+            let data = response.data.data.children;
             if (data) {
+                //console.log("User comments response is "+JSON.stringify(data))
                 // recursively fetch user's entire comment history
                 try {
                     response.concat(await this.getUserComments(username, data[99].data.name));
+                    
                     resolve(response);
                 } catch (error) {
                     resolve(response);
@@ -34,5 +37,19 @@ module.exports = {
                 reject(new Error("Data fetch failed - no more data"));
             }
         });
+    },
+
+    getUserUpvoted: function (username) {
+        return new Promise(async(resolve, reject) => {
+
+            var response = await axios.get(`https://www.reddit.com/user/${username}/overview/.json`);
+            //console.log('User overview response '+JSON.stringify(response))
+
+            if(response)
+                resolve(response)
+            else
+                reject(new Error("Failed to fetch upvotes")) 
+
+        })
     }
 }

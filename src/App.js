@@ -101,6 +101,9 @@ class App extends Component {
       // fetch user's Overview (comments history) and set state
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
       this.setState({userComments:searchResults_userComments.data.data.children});
+
+      await API_helper_Reddit.getUserUpvoted(searchQuery)
+      
     } catch(error){
       console.log("ERROR: "+error);
     }

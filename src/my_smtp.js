@@ -1,4 +1,6 @@
 const nodemailer = require('nodemailer');
+import html2canvas from 'html2canvas'
+import jsPDF from 'jspdf'
 
 
 let transporter = nodemailer.createTransport({
@@ -27,7 +29,11 @@ let mailOptions = {
     }
 };
 
+
 transporter.sendMail(mailOptions, (error, info) => {
+
+    
+
     if (error) {
         return console.log(error);
     }
