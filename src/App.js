@@ -39,9 +39,9 @@ class App extends Component {
             userAbout: {},
             userComments: [],
             userPosts: [],
+            showResults: false
         };
     }
-
 
     generatePDF(){
         const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
@@ -59,6 +59,7 @@ class App extends Component {
   }
 
   componentDidMount() {
+    this.setState({showResults:false});
     ///\remark Access token not required as yet - hence code below commented out
     /*
     if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
@@ -86,6 +87,7 @@ class App extends Component {
 
 
     async handleSearchUser(searchQuery) {
+      this.setState({showResults:true})
         console.log("\nhandleSearchUser!");
 
         try {
@@ -124,12 +126,11 @@ class App extends Component {
       <div className="container">
         <div className="logo"><img src={logo}  alt='logo' /></div>
         <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
-        <UserAbout userAboutData={this.state. userAbout} />
-          <UserOverview
+        {this.state.showResults? <UserAbout userAboutData={this.state. userAbout} />: null}
+        {this.state.showResults? <UserOverview
               userOverviewData_Comments={this.state.userComments}
               userOverviewData_Posts={this.state.userPosts}
-              userOverviewData_Upvotes={this.state.most_upvotes}/>
-
+              userOverviewData_Upvotes={this.state.most_upvotes}/> : null}
       </div>
     );
   }
