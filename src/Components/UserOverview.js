@@ -54,6 +54,36 @@ class UserOverview extends Component {
                         <div>
                         </div>
                     </div>
+
+                    <div className="user-row">
+
+                        <div className="user-circle">
+                            <div className="comment-info">{this.props.userOverviewData_most_upvoted_post.ups}</div>
+                            <span>Most Upvotes for Posts</span>
+                        </div >
+
+                        <div>
+                            <div>{this.props.userOverviewData_most_upvoted_post.body}</div>
+                        </div>
+
+                        <div>
+                        </div>
+                    </div>
+
+                    <div className="user-row">
+
+                        <div className="user-circle">
+                            <div className="comment-info">{this.props.userOverviewData_most_downvoted_post.downs}</div>
+                            <span>Most Downvotes for Posts</span>
+                        </div>
+
+                        <div>
+                            <div>{this.props.userOverviewData_most_downvoted_post.body}</div>
+                        </div>
+
+                        <div>
+                        </div>
+                    </div>
                 </div>
             </div>
         );

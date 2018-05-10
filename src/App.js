@@ -123,12 +123,17 @@ class App extends Component {
       });
       console.log("Most downvotes are "+most_downvotes)*/
 
-      var commentStats = API_helper_Reddit.getCommentsStats(searchResults_userComments)
+      var commentStats = API_helper_Reddit.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
       this.setState({ mostDownvotedComment: commentStats.downvoted })
       // fetch user's posts and set state
       var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
+      let postStats = API_helper_Reddit.getVotesStats(searchResults_userPosts)
+
       this.setState({ userPosts: searchResults_userPosts });
+      this.setState({ mostUpvotedPost: postStats.upvoted })
+      this.setState({ mostDownvotedPost: postStats.downvoted})
+
     } catch (error) {
       console.log("ERROR: " + error);
     }
