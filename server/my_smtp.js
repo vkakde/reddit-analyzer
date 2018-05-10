@@ -28,23 +28,25 @@ let mailOptions = {
     }*/
 };
 
-transporter.sendMail(mailOptions, (error, info) => {
+/*transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
         return console.log(error);
     }
 
     console.log('Message sent: %s' + info.messageId);
-});
+});*/
 
-/*module.exports = {
+module.exports = {
 
     async sendEmail(){
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
-                return console.log(error);
+                console.log(error);
+                return false;
             }
 
             console.log('Message sent: %s'+ info.messageId);
+            return true;
         });
     }
-}*/
+}

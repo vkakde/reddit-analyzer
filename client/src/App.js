@@ -102,6 +102,15 @@ class App extends Component {
 
     return body;
   };
+  /*callApi = async () => {
+    const response = await fetch('/api/sendEmail');
+    const body = await response.json();
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
+  };*/
+
 
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
@@ -151,6 +160,7 @@ class App extends Component {
 
       console.log("Avg comment karma is "+commentStats.avg_karma)
       //this.generatePDF()
+
 
     } catch (error) {
       console.log("ERROR: " + error);
