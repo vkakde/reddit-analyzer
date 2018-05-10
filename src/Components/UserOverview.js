@@ -9,7 +9,8 @@ class UserOverview extends Component {
 
     render() {
         return (
-            <div className="user-info">
+            <div id="toPrint"
+            className="user-info">
                 <h2>User Comment Overview</h2>
                 <div className="card text-center">
                     <br />

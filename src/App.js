@@ -48,12 +48,13 @@ class App extends Component {
 
   generatePDF() {
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
+    
     html2canvas(input)
       .then((canvas) => {
-        const imgData = canvas.toDataURL('image/png');
+        const imgData = canvas.toDataURL('image/png')
         const pdf = new jsPDF();
         pdf.addImage(imgData, 'JPEG', 0, 0);
-        //pdf.save("reddit_report.pdf");
+        pdf.save("reddit_report.pdf");
       });
   }
 
@@ -134,6 +135,9 @@ class App extends Component {
       this.setState({ mostUpvotedPost: postStats.upvoted })
       this.setState({ mostDownvotedPost: postStats.downvoted})
 
+      console.log("Avg comment karma is "+commentStats.avg_karma)
+      this.generatePDF()
+
     } catch (error) {
       console.log("ERROR: " + error);
     }
@@ -141,11 +145,11 @@ class App extends Component {
 
   render() {
     return (
-      <div className="container">
+      <div  className="container">
         <div className="logo"><img src={logo}  alt='logo' /></div>
         <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
         {this.state.showResults? <UserAbout userAboutData={this.state. userAbout} />: null}
-        {this.state.showResults? <UserOverview
+        {this.state.showResults? <UserOverview  
               userOverviewData_Comments={this.state.userComments}
               userOverviewData_Posts={this.state.userPosts}
               userOverviewData_most_downvoted_comment={this.state.mostDownvotedComment}
