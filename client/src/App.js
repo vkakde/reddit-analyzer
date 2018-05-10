@@ -11,7 +11,7 @@ Authentication for Reddit API requests
   References
   1. https://github.com/hortinstein/reddit-user-dump/blob/master/index.js
   2. https://github.com/anhuynh/reddit-user-stats/blob/master/src/App.js (React)
-  3. 
+  3. https://medium.freecodecamp.org/how-to-make-create-react-app-work-with-a-node-backend-api-7c5c48acb1b0 (React with Express)
 */
 
 import React, { Component } from 'react';
@@ -32,19 +32,20 @@ var API_helper_Reddit = require("./API-helper-reddit.js");
 //var accessTokenTimestamp = 0;
 
 class App extends Component {
-    constructor() {
-        super();
-        this.state = {
-            userAbout: {},
-            userComments: [],
-            userPosts: [],
-            showResults: false,
-            mostUpvotedComment: {},
-            mostDownvotedComment: {},
-            mostUpvotedPost: {},
-            mostDownvotedPost: {}
-        };
-    }
+  constructor() {
+    super();
+    this.state = {
+      userAbout: {},
+      userComments: [],
+      userPosts: [],
+      showResults: false,
+      mostUpvotedComment: {},
+      mostDownvotedComment: {},
+      mostUpvotedPost: {},
+      mostDownvotedPost: {},
+      response: '' // state for express
+    };
+  }
 
   generatePDF() {
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
@@ -58,12 +59,15 @@ class App extends Component {
       });
   }
 
-
   componentWillMount() {
   }
 
   componentDidMount() {
     this.setState({ showResults: false });
+
+    this.callApi()
+      .then(res => this.setState({ response: res.express }))
+      .catch(err => console.log(err));
     ///\remark Access token not required as yet - hence code below commented out
     /*
     if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
@@ -88,6 +92,16 @@ class App extends Component {
     }
     */
   }
+
+  // sample method to call express API and fetch some data
+  callApi = async () => {
+    const response = await fetch('/api/hello');
+    const body = await response.json();
+
+    if (response.status !== 200) throw Error(body.message);
+
+    return body;
+  };
 
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
@@ -133,10 +147,10 @@ class App extends Component {
 
       this.setState({ userPosts: searchResults_userPosts });
       this.setState({ mostUpvotedPost: postStats.upvoted })
-      this.setState({ mostDownvotedPost: postStats.downvoted})
+      this.setState({ mostDownvotedPost: postStats.downvoted })
 
       console.log("Avg comment karma is "+commentStats.avg_karma)
-      this.generatePDF()
+      //this.generatePDF()
 
     } catch (error) {
       console.log("ERROR: " + error);
