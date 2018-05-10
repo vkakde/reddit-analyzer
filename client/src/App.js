@@ -49,7 +49,7 @@ class App extends Component {
 
   generatePDF() {
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
-    
+
     html2canvas(input)
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/png')
@@ -68,40 +68,8 @@ class App extends Component {
     this.callApi()
       .then(res => this.setState({ response: res.express }))
       .catch(err => console.log(err));
-    ///\remark Access token not required as yet - hence code below commented out
-    /*
-    if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
-      axios.request({
-        url: "https://www.reddit.com/api/v1/access_token",
-        method: "post",
-        auth: {
-          ///\remark Client ID and secret belong to dev account of reddit username: cs554acc1
-          username: "BGW4aLakJfAdmQ",
-          password: "jhZ8Amx4HTmXdZjDGodRFdZhlwQ"
-        },
-        data: {
-          "grant_type": "client_credentials",
-          "scope": "public"
-        }
-      }).then(function (res) {
-        expiresIn = res.data.expires_in;
-        accessToken = res.data.access_token;
-        accessTokenTimestamp = Date.now();
-        console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
-      });
-    }
-    */
   }
 
-  // sample method to call express API and fetch some data
-  /*callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };*/
   callApi = async () => {
     const response = await fetch('/api/sendEmail');
     const body = await response.json();
@@ -114,15 +82,16 @@ class App extends Component {
 
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
-    console.log("\nhandleSearchUser!");
 
     try {
       // fetch user's About and set state
-      var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
-      this.setState({ userAbout: searchResults_userAbout.data.data });
+      // var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
+      var searchResults_userAbout = await fetch(`/reddit/about/${searchQuery}`);
+      searchResults_userAbout = await searchResults_userAbout.json();
+      this.setState({ userAbout: searchResults_userAbout });
     }
     catch (error) {
-      alert(`No reddit user by the name of ${searchQuery}!`);
+      alert(`No reddit user by the name of ${searchQuery}! `);
     }
     try {
       // fetch user's comments and set state
@@ -158,7 +127,7 @@ class App extends Component {
       this.setState({ mostUpvotedPost: postStats.upvoted })
       this.setState({ mostDownvotedPost: postStats.downvoted })
 
-      console.log("Avg comment karma is "+commentStats.avg_karma)
+      console.log("Avg comment karma is " + commentStats.avg_karma)
       //this.generatePDF()
 
 
