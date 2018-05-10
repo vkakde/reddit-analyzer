@@ -19,12 +19,21 @@ app.get('/api/sendEmail', (req, res) => {
     res.send({ express: "Email sending failed: from express" })
 })
 
-// this route serve's reddit user's About
+// this route serves reddit user's About
 app.get("/reddit/about/:username", async (req, res) => {
-  console.log(`HERE, searching for ${req.params.username}`);
   try {
     var result = await API_helper_Reddit.getUserAbout(req.params.username);
     res.send(result.data.data);
+  } catch (error) {
+    res.status(500).send();
+  };
+});
+
+// this route serves reddit user's comment history
+app.get("/reddit/comments/:username", async (req, res) => {
+  try {
+    var result = await API_helper_Reddit.getUserComments(req.params.username);
+    res.send(result);
   } catch (error) {
     res.status(500).send();
   };

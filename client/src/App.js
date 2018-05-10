@@ -79,13 +79,11 @@ class App extends Component {
     return body;
   };
 
-
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
 
+    // fetch user's About and set state
     try {
-      // fetch user's About and set state
-      // var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
       var searchResults_userAbout = await fetch(`/reddit/about/${searchQuery}`);
       searchResults_userAbout = await searchResults_userAbout.json();
       this.setState({ userAbout: searchResults_userAbout });
@@ -93,12 +91,15 @@ class App extends Component {
     catch (error) {
       alert(`No reddit user by the name of ${searchQuery}! `);
     }
+
+    // fetch user's comments and set state
     try {
-      // fetch user's comments and set state
-      var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
+      var searchResults_userComments = await fetch(`/reddit/comments/${searchQuery}`);
+      searchResults_userComments = await searchResults_userComments.json();
       this.setState({ userComments: searchResults_userComments });
 
-      /*var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
+      /*
+      var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
       var most_upvoted_comment = {}
       var most_downvoted_comment = searchResults_userComments[0].data
 
@@ -114,7 +115,8 @@ class App extends Component {
             most_downvoted_comment = element.data
           }
       });
-      console.log("Most downvotes are "+most_downvotes)*/
+      console.log("Most downvotes are "+most_downvotes)
+      */
 
       var commentStats = API_helper_Reddit.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
@@ -129,13 +131,10 @@ class App extends Component {
 
       console.log("Avg comment karma is " + commentStats.avg_karma)
       //this.generatePDF()
-
-
     } catch (error) {
       console.log("ERROR: " + error);
     }
   }
-
 
   render() {
     return (
