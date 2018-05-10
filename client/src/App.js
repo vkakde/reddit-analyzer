@@ -94,22 +94,22 @@ class App extends Component {
   }
 
   // sample method to call express API and fetch some data
-  callApi = async () => {
+  /*callApi = async () => {
     const response = await fetch('/api/hello');
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
 
     return body;
-  };
-  /*callApi = async () => {
+  };*/
+  callApi = async () => {
     const response = await fetch('/api/sendEmail');
     const body = await response.json();
 
     if (response.status !== 200) throw Error(body.message);
 
     return body;
-  };*/
+  };
 
 
   async handleSearchUser(searchQuery) {
@@ -167,19 +167,21 @@ class App extends Component {
     }
   }
 
+
   render() {
     return (
-      <div  className="container">
-        <div className="logo"><img src={logo}  alt='logo' /></div>
-        <SearchBar searchUser={this.handleSearchUser.bind(this)}/>
-        {this.state.showResults? <UserAbout userAboutData={this.state. userAbout} />: null}
-        {this.state.showResults? <UserOverview  
-              userOverviewData_Comments={this.state.userComments}
-              userOverviewData_Posts={this.state.userPosts}
-              userOverviewData_most_downvoted_comment={this.state.mostDownvotedComment}
-              userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
-              userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
-              userOverviewData_most_upvoted_post={this.state.mostUpvotedPost}/> : null}
+      <div className="container">
+        <div className="logo"><img src={logo} alt='logo' /></div>
+        <SearchBar searchUser={this.handleSearchUser.bind(this)} />
+        <p className="text-primary">{this.state.response}</p>
+        {this.state.showResults ? <UserAbout userAboutData={this.state.userAbout} /> : null}
+        {this.state.showResults ? <UserOverview
+          userOverviewData_Comments={this.state.userComments}
+          userOverviewData_Posts={this.state.userPosts}
+          userOverviewData_most_downvoted_comment={this.state.mostDownvotedComment}
+          userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
+          userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
+          userOverviewData_most_upvoted_post={this.state.mostUpvotedPost} /> : null}
       </div>
     );
   }
