@@ -41,7 +41,9 @@ class App extends Component {
             userPosts: [],
             showResults: false,
             mostUpvotedComment: {},
-            mostDownvotedComment: {}
+            mostDownvotedComment: {},
+            mostUpvotedPost: {},
+            mostDownvotedPost: {}
         };
     }
 
@@ -130,6 +132,8 @@ class App extends Component {
             // fetch user's posts and set state
             var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
             this.setState({ userPosts: searchResults_userPosts });
+            console.log("Post 1 is "+JSON.stringify(searchResults_userPosts[0]))
+            console.log("Most upvotes on post are "+API_helper_Reddit.getCommentsStats(searchResults_userPosts).upvoted.ups)
         } catch (error) {
             console.log("ERROR: " + error);
         }
@@ -147,7 +151,9 @@ class App extends Component {
               userOverviewData_Comments={this.state.userComments}
               userOverviewData_Posts={this.state.userPosts}
               userOverviewData_most_downvoted_comment={this.state.mostDownvotedComment}
-              userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}/> : null}
+              userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
+              userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
+              userOverviewData_most_upvoted_post={this.state.mostUpvotedPost}/> : null}
       </div>
     );
   }

@@ -60,14 +60,14 @@ module.exports = {
         });
     },
 
-    // Scans for the most upvotes to most downvotes in just one loop O(n)
-    getCommentsStats: function(userComments){
+    // Scans for the most upvotes to most downvotes posts/comments in just one loop O(n)
+    getVotesStats: function(results){
 
-        var most_upvotes = 0,most_downvotes = userComments[0].data.downs;
+        var most_upvotes = 0,most_downvotes = results[0].data.downs;
         var most_upvoted_comment = {}
-        var most_downvoted_comment = userComments[0].data
+        var most_downvoted_comment = results[0].data
 
-        userComments.forEach(element => {
+        results.forEach(element => {
                 if(element.data.ups > most_upvotes){
                     most_upvotes = element.data.ups
                     most_upvoted_comment = element.data
