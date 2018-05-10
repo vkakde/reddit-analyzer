@@ -1,12 +1,11 @@
 import React, { Component } from 'react';
-import './UserOverview.css';
+import '../../public/css/UserOverview.css';
 class UserOverview extends Component {
     constructor() {
         super();
         this.state = {
         }
     }
-
 
     render() {
         return (
@@ -31,29 +30,29 @@ class UserOverview extends Component {
                     </div>
                     <br />
                     <div className="user-row">
-                        
+
                         <div className="user-circle">
                             <div className="comment-info">{this.props.userOverviewData_most_upvoted_comment.ups}</div>
                             <span>Most Upvotes</span>
                         </div >
                         <div>
-                          <div>{this.props.userOverviewData_most_upvoted_comment.body}</div>
+                            <div>{this.props.userOverviewData_most_upvoted_comment.body}</div>
                         </div>
                         <div>
-                          </div>
+                        </div>
                     </div>
 
                     <div className="user-row">
-                        
+
                         <div className="user-circle">
                             <div className="comment-info">{this.props.userOverviewData_most_downvoted_comment.downs}</div>
                             <span>Most Downvotes</span>
                         </div >
                         <div>
-                          <div>{this.props.userOverviewData_most_downvoted_comment.body}</div>
+                            <div>{this.props.userOverviewData_most_downvoted_comment.body}</div>
                         </div>
                         <div>
-                          </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -64,7 +63,7 @@ class UserOverview extends Component {
 UserOverview.propTypes = {
     userOverviewData_Comments: React.PropTypes.array,
     userOverviewData_Posts: React.PropTypes.array,
-   // userOverviewData_Upvotes: React.PropTypes.array
+    // userOverviewData_Upvotes: React.PropTypes.array
 }
 
 export default UserOverview;
