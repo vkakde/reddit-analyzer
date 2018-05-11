@@ -5,10 +5,6 @@ var API_helper_Reddit = require("./API-helper-reddit.js");
 const app = express();
 const port = process.env.PORT || 5000;
 
-app.get('/api/hello', (req, res) => {
-  res.send({ express: 'Hello From Express' });
-});
-
 app.get('/api/sendEmail', (req, res) => {
 
   let sent = mySmtp.sendEmail()
