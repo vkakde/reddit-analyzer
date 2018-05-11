@@ -1,9 +1,18 @@
-const express = require('express');
-const mySmtp = require('./my_smtp');
+var express = require('express');
+var mySmtp = require('./my_smtp');
 var API_helper_Reddit = require("./API-helper-reddit.js");
+
+var bluebird = require('bluebird');
+var redis = bluebird.Promise.promisifyAll(require('redis'));
 
 const app = express();
 const port = process.env.PORT || 5000;
+
+// create Redis client
+let client = redis.createClient();
+client.on('connect', function(){
+  console.log('Redis connected on port:6379 ...');
+});
 
 // this route recieves email sending requests
 app.get('/api/sendEmail', (req, res) => {
