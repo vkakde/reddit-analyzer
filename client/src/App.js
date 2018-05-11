@@ -59,57 +59,45 @@ class App extends Component {
       });
   }
 
+  async sendReportByEmail() {
+
+    try{
+
+      const response = await fetch('/api/sendEmail');
+      const body = await response.json();
+  
+      if (response.status !== 200) 
+        throw Error(body.message);
+
+      console.log({ success: body.message })
+
+    }catch(error){
+      console.log({ error: error })
+    }
+  }
+
   componentWillMount() {
   }
 
   componentDidMount() {
     this.setState({ showResults: false });
 
-    this.callApi()
+    /*this.callApi()
       .then(res => this.setState({ response: res.express }))
       .catch(err => console.log(err));
-    ///\remark Access token not required as yet - hence code below commented out
-    /*
-    if (accessTokenTimestamp === 0 || Date.now() - accessTokenTimestamp <= 100) {
-      axios.request({
-        url: "https://www.reddit.com/api/v1/access_token",
-        method: "post",
-        auth: {
-          ///\remark Client ID and secret belong to dev account of reddit username: cs554acc1
-          username: "BGW4aLakJfAdmQ",
-          password: "jhZ8Amx4HTmXdZjDGodRFdZhlwQ"
-        },
-        data: {
-          "grant_type": "client_credentials",
-          "scope": "public"
-        }
-      }).then(function (res) {
-        expiresIn = res.data.expires_in;
-        accessToken = res.data.access_token;
-        accessTokenTimestamp = Date.now();
-        console.log("Access Token acquired successfully. Expires in: " + expiresIn + "\nToken timestamp: " + accessTokenTimestamp);
-      });
-    }
-    */
+      // sample method to call express API and fetch some data
+      callApi = async () => {
+      const response = await fetch('/api/hello');
+      const body = await response.json();
+
+      if (response.status !== 200) throw Error(body.message);
+
+      return body;
+    };*/
+
   }
 
-  // sample method to call express API and fetch some data
-  /*callApi = async () => {
-    const response = await fetch('/api/hello');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };*/
-  callApi = async () => {
-    const response = await fetch('/api/sendEmail');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
+  
 
 
   async handleSearchUser(searchQuery) {
@@ -128,24 +116,6 @@ class App extends Component {
       // fetch user's comments and set state
       var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
       this.setState({ userComments: searchResults_userComments });
-
-      /*var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
-      var most_upvoted_comment = {}
-      var most_downvoted_comment = searchResults_userComments[0].data
-
-      searchResults_userComments.forEach(element => {
-          if(element.data.ups > most_upvotes){
-              most_upvotes = element.data.ups
-              most_upvoted_comment = element.data
-          }
-          
-          if(element.data.downs < most_downvotes){
-            most_downvotes = element.data.downs
-            console.log("Downvotes was updated with "+most_downvotes)
-            most_downvoted_comment = element.data
-          }
-      });
-      console.log("Most downvotes are "+most_downvotes)*/
 
       var commentStats = API_helper_Reddit.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
@@ -182,6 +152,7 @@ class App extends Component {
           userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
           userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
           userOverviewData_most_upvoted_post={this.state.mostUpvotedPost} /> : null}
+          <a href={this.sendReportByEmail}>SEND REPORT BY EMAIL</a>
       </div>
     );
   }

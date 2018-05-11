@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer');
+const redisConnection = require("./redis-connection")
 /*import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'*/
 
@@ -8,17 +9,17 @@ let transporter = nodemailer.createTransport({
     secure: false, // true for 465, false for other ports
     auth: {
         user: 'apikey',
-        pass: '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'
+        pass: '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'
     }
 });
 
 // setup email data with unicode symbols
 let mailOptions = {
-    from: '"Bruce Wayne 👻" <pranitkulkarni24@gmail.com>', // sender address
-    to: 'pkulkar2@stevens.edu', // list of receivers
-    subject: 'Hello from SMTP ✔', // Subject laine
-    text: 'Hello bro! Have a good day. Sent using sendgrid SMTP server', // plain text body
-    html: '<b>Hello bro! Have a good day</b> <br> Sent using sendgrid SMTP server', // html body
+    from: '"Pranit Kulkarni" pkulkar2@stevens.edu', // sender address
+    to: '<vishwajeetkakde@gmail.com>', // list of receivers
+    subject: 'Hello from CS554 Project SMTP ✔', // Subject laine
+    text: 'Hello project partner! Have a good day. Testing emails using sendgrid SMTP server', // plain text body
+    html: '<b>Hello project partner! Have a good day</b> <br> Testing emails using sendgrid SMTP server from worker', // html body
     attachments: [{
         filename: 'reddit_report.txt',
         content: 'This is a demo user report'
@@ -28,15 +29,34 @@ let mailOptions = {
     }*/
 };
 
-/*transporter.sendMail(mailOptions, (error, info) => {
-    if (error) {
-        return console.log(error);
-    }
+redisConnection.on("sendEmail:request:*", async(message,channel) => {
+    console.log("Redis pubsub event called..")
+    let requestId = message.requestId;
+    let eventName = message.eventName;
+    var response;
 
-    console.log('Message sent: %s' + info.messageId);
-});*/
+    //console.log("Get person redis event called in worker")
 
-module.exports = {
+    let messageText = message.data.message;
+    let successEvent = `${eventName}:success:${requestId}`;
+
+    transporter.sendMail(mailOptions, (error, info) => {
+        if (error) {
+            console.log(error);
+            response = { error: error }
+        }
+
+        console.log('Message sent: %s'+ info.messageId);
+        response = { message: "Email sent from the app"}
+    });
+
+    redisConnection.emit(successEvent, {
+        requestId: requestId,
+        data:response,
+        eventName: eventName
+    });
+})
+/*module.exports = {
 
     async sendEmail(){
         transporter.sendMail(mailOptions, (error, info) => {
@@ -49,4 +69,4 @@ module.exports = {
             return true;
         });
     }
-}
+}*/
