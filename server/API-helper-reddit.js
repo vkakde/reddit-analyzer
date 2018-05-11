@@ -7,7 +7,6 @@ module.exports = {
     getUserAbout: function (username) {
         return new Promise(async (resolve, reject) => {
             try {
-                console.log(`Searching for user ${username}, URL: https://www.reddit.com/user/${username}/about/.json`);
                 var response = await axios.get(`https://www.reddit.com/user/${username}/about/.json`);
             } catch (error) {
                 console.log("User not found")
