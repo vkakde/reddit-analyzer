@@ -1,5 +1,4 @@
 ///\desc This file contains functions to operate on user data fetched from reddit
-var bluebird = require('bluebird');
 
 module.exports = {
     // Scans for the most upvotes to most downvotes posts/comments in just one loop O(n)

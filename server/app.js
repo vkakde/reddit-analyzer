@@ -16,7 +16,7 @@ redisClient.on('connect', function () {
   console.log('Redis connected on port:6379 ...');
 });
 
-app.get('/api/sendEmail', async(req,res) => {
+app.get('/api/sendEmail', async (req, res) => {
 
   /*let sent = mySmtp.sendEmail()
 
@@ -25,22 +25,22 @@ app.get('/api/sendEmail', async(req,res) => {
   else
   res.send({ express: "Email sending failed: from express"})*/
 
-  try{
+  try {
     console.log("Route called")
 
     let response = await nrpSender.sendMessage({
-        redis: redisConnection,
-        eventName: "sendEmail",
-        /*data: {
-            message: req.params.id
-        }*/
+      redis: redisConnection,
+      eventName: "sendEmail",
+      /*data: {
+          message: req.params.id
+      }*/
     })
 
     res.json(response)
 
-}catch(e){
+  } catch (e) {
     res.json({ error: e.message });
-}
+  }
 })
 
 // this route serves reddit user's About
@@ -49,7 +49,7 @@ app.get("/reddit/about/:username", async (req, res) => {
     let found = false;
     var result;
 
-    // first, search redis cache for this username
+    // first, search redis cache for this username's About
     await redisClient.lrange('about', 0, 4, async function (err, redisHistory) {
       if (err) {
         res.status(500).send(error.message);
@@ -84,10 +84,43 @@ app.get("/reddit/about/:username", async (req, res) => {
 // this route serves reddit user's comment history
 app.get("/reddit/comments/:username", async (req, res) => {
   try {
-    var result = await API_helper_Reddit.getUserComments(req.params.username);
-    res.send(result);
+    let found = false;
+    var result;
+
+    // first, search redis cache for this username's Comments
+    await redisClient.lrange('comments', 0, 4, async function (err, redisHistory) {
+      if (err) {
+      }
+      else {
+        for (let i = 0; i < redisHistory.length; i++) {
+          userHistory = await JSON.parse(redisHistory[i]);
+          for (let j = 0; j < userHistory.length; j++) {
+            let obj = userHistory[j];
+            if (obj.data.author.toLowerCase() == req.params.username.toLowerCase()) {
+              console.log(`User ${req.params.username} found in cache`);
+              found = true;
+              res.send(userHistory);
+              break;
+            }
+          }
+        }
+
+        if (!found) {
+          console.log(`User ${req.params.username} not found in cache`);
+          try {
+            result = await API_helper_Reddit.getUserComments(req.params.username);
+            await redisClient.lpush("comments", await JSON.stringify(result));
+            ///\cite https://stackoverflow.com/a/12060069
+            ///\remark How to limit redis list size
+            await redisClient.ltrim("comments", 0, 4); // cache only upto 5 recent entries
+            res.send(result);
+          } catch (error) {
+          }
+        }
+      }
+    });
   } catch (error) {
-    res.status(500).send();
+    console.log(error.message)
   };
 });
 
