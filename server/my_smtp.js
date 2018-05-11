@@ -9,7 +9,7 @@ let transporter = nodemailer.createTransport({
     secure: false, // true for 465, false for other ports
     auth: {
         user: 'apikey',
-        pass: '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'
+        pass: 'api key hidden'
     }
 });
 
