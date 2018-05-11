@@ -127,10 +127,43 @@ app.get("/reddit/comments/:username", async (req, res) => {
 // this route serves reddit user's post history
 app.get("/reddit/posts/:username", async (req, res) => {
   try {
-    var result = await API_helper_Reddit.getUserPosts(req.params.username);
-    res.send(result);
+    let found = false;
+    var result;
+
+    // first, search redis cache for this username's Comments
+    await redisClient.lrange('posts', 0, 4, async function (err, redisHistory) {
+      if (err) {
+      }
+      else {
+        for (let i = 0; i < redisHistory.length; i++) {
+          userHistory = await JSON.parse(redisHistory[i]);
+          for (let j = 0; j < userHistory.length; j++) {
+            let obj = userHistory[j];
+            if (obj.data.author.toLowerCase() == req.params.username.toLowerCase()) {
+              console.log(`User ${req.params.username} found in cache`);
+              found = true;
+              res.send(userHistory);
+              break;
+            }
+          }
+        }
+
+        if (!found) {
+          console.log(`User ${req.params.username} not found in cache`);
+          try {
+            result = await API_helper_Reddit.getUserPosts(req.params.username);
+            await redisClient.lpush("posts", await JSON.stringify(result));
+            ///\cite https://stackoverflow.com/a/12060069
+            ///\remark How to limit redis list size
+            await redisClient.ltrim("posts", 0, 4); // cache only upto 5 recent entries
+            res.send(result);
+          } catch (error) {
+          }
+        }
+      }
+    });
   } catch (error) {
-    res.status(500).send();
+    console.log(error.message)
   };
 });
 
