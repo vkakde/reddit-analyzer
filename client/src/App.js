@@ -25,11 +25,7 @@ import '../public/css/app.css';
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 
-//var axios = require("axios");
-var API_helper_Reddit = require("./API-helper-reddit.js");
-//var expiresIn = 0;
-//var accessToken = '';
-//var accessTokenTimestamp = 0;
+var dataFunctions = require("./data-functions.js");
 
 class App extends Component {
   constructor() {
@@ -42,14 +38,13 @@ class App extends Component {
       mostUpvotedComment: {},
       mostDownvotedComment: {},
       mostUpvotedPost: {},
-      mostDownvotedPost: {},
-      response: '' // state for express
+      mostDownvotedPost: {}
     };
   }
 
   generatePDF() {
     const input = document.getElementById('toPrint'); // element with this id will be selected to print in pdf
-    
+
     html2canvas(input)
       .then((canvas) => {
         const imgData = canvas.toDataURL('image/png')
@@ -62,7 +57,7 @@ class App extends Component {
   async sendReportByEmail() {
 
     try{
-
+      console.log("Sending email to user")
       const response = await fetch('/api/sendEmail');
       const body = await response.json();
   
@@ -80,70 +75,58 @@ class App extends Component {
   }
 
   componentDidMount() {
+    
     this.setState({ showResults: false });
-
-    /*this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
-      // sample method to call express API and fetch some data
-      callApi = async () => {
-      const response = await fetch('/api/hello');
-      const body = await response.json();
-
-      if (response.status !== 200) throw Error(body.message);
-
-      return body;
-    };*/
 
   }
 
   
 
-
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
-    console.log("\nhandleSearchUser!");
 
+    // fetch user's About and set state
     try {
-      // fetch user's About and set state
-      var searchResults_userAbout = await API_helper_Reddit.getUserAbout(searchQuery);
-      this.setState({ userAbout: searchResults_userAbout.data.data });
+      var searchResults_userAbout = await fetch(`/reddit/about/${searchQuery}`);
+      searchResults_userAbout = await searchResults_userAbout.json();
+      this.setState({ userAbout: searchResults_userAbout });
     }
     catch (error) {
-      alert(`No reddit user by the name of ${searchQuery}!`);
+      alert(`No reddit user by the name of ${searchQuery}! `);
     }
+
+    // fetch user's comments and set state
     try {
-      // fetch user's comments and set state
-      var searchResults_userComments = await API_helper_Reddit.getUserComments(searchQuery);
+      var searchResults_userComments = await fetch(`/reddit/comments/${searchQuery}`);
+      searchResults_userComments = await searchResults_userComments.json();
       this.setState({ userComments: searchResults_userComments });
 
-      var commentStats = API_helper_Reddit.getVotesStats(searchResults_userComments)
+      var commentStats = dataFunctions.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
       this.setState({ mostDownvotedComment: commentStats.downvoted })
-      // fetch user's posts and set state
-      var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
-      let postStats = API_helper_Reddit.getVotesStats(searchResults_userPosts)
 
+      // fetch user's posts and set state
+      var searchResults_userPosts = await fetch(`/reddit/posts/${searchQuery}`);
+      searchResults_userPosts = await searchResults_userPosts.json();
       this.setState({ userPosts: searchResults_userPosts });
+      
+
+      let postStats = dataFunctions.getVotesStats(searchResults_userPosts)
       this.setState({ mostUpvotedPost: postStats.upvoted })
       this.setState({ mostDownvotedPost: postStats.downvoted })
 
-      console.log("Avg comment karma is "+commentStats.avg_karma)
+      console.log("Avg comment karma is " + commentStats.avg_karma)
       //this.generatePDF()
-
-
     } catch (error) {
       console.log("ERROR: " + error);
     }
   }
-
 
   render() {
     return (
       <div className="container">
         <div className="logo"><img src={logo} alt='logo' /></div>
         <SearchBar searchUser={this.handleSearchUser.bind(this)} />
-        <p className="text-primary">{this.state.response}</p>
         {this.state.showResults ? <UserAbout userAboutData={this.state.userAbout} /> : null}
         {this.state.showResults ? <UserOverview
           userOverviewData_Comments={this.state.userComments}
@@ -152,7 +135,7 @@ class App extends Component {
           userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
           userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
           userOverviewData_most_upvoted_post={this.state.mostUpvotedPost} /> : null}
-          <a href={this.sendReportByEmail}>SEND REPORT BY EMAIL</a>
+          <button type='button' onClick={this.sendReportByEmail}>SEND REPORT BY EMAIL</button>
       </div>
     );
   }

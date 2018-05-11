@@ -16,7 +16,7 @@ let transporter = nodemailer.createTransport({
 // setup email data with unicode symbols
 let mailOptions = {
     from: '"Pranit Kulkarni" pkulkar2@stevens.edu', // sender address
-    to: '<vishwajeetkakde@gmail.com>', // list of receivers
+    to: '<pranitkulkarni24@gmail.com>', // list of receivers
     subject: 'Hello from CS554 Project SMTP ✔', // Subject laine
     text: 'Hello project partner! Have a good day. Testing emails using sendgrid SMTP server', // plain text body
     html: '<b>Hello project partner! Have a good day</b> <br> Testing emails using sendgrid SMTP server from worker', // html body
@@ -56,17 +56,3 @@ redisConnection.on("sendEmail:request:*", async(message,channel) => {
         eventName: eventName
     });
 })
-/*module.exports = {
-
-    async sendEmail(){
-        transporter.sendMail(mailOptions, (error, info) => {
-            if (error) {
-                console.log(error);
-                return false;
-            }
-
-            console.log('Message sent: %s'+ info.messageId);
-            return true;
-        });
-    }
-}*/

@@ -12,7 +12,6 @@ class UserAbout extends Component {
   }
 
   render() {
-    console.log("Recieved object: " + this.props.userAboutData.name);
     return (
       <div className="user-info">
         <h2>User Profile</h2>
