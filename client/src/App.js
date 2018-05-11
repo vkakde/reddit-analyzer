@@ -25,11 +25,7 @@ import '../public/css/app.css';
 import html2canvas from 'html2canvas'
 import jsPDF from 'jspdf'
 
-//var axios = require("axios");
-var API_helper_Reddit = require("./API-helper-reddit.js");
-//var expiresIn = 0;
-//var accessToken = '';
-//var accessTokenTimestamp = 0;
+var dataFunctions = require("./data-functions.js");
 
 class App extends Component {
   constructor() {
@@ -118,14 +114,17 @@ class App extends Component {
       console.log("Most downvotes are "+most_downvotes)
       */
 
-      var commentStats = API_helper_Reddit.getVotesStats(searchResults_userComments)
+      var commentStats = dataFunctions.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
       this.setState({ mostDownvotedComment: commentStats.downvoted })
-      // fetch user's posts and set state
-      var searchResults_userPosts = await API_helper_Reddit.getUserPosts(searchQuery);
-      let postStats = API_helper_Reddit.getVotesStats(searchResults_userPosts)
 
+      // fetch user's posts and set state
+      var searchResults_userPosts = await fetch(`/reddit/posts/${searchQuery}`);
+      searchResults_userPosts = await searchResults_userPosts.json();
       this.setState({ userPosts: searchResults_userPosts });
+      
+
+      let postStats = dataFunctions.getVotesStats(searchResults_userPosts)
       this.setState({ mostUpvotedPost: postStats.upvoted })
       this.setState({ mostDownvotedPost: postStats.downvoted })
 
@@ -141,7 +140,6 @@ class App extends Component {
       <div className="container">
         <div className="logo"><img src={logo} alt='logo' /></div>
         <SearchBar searchUser={this.handleSearchUser.bind(this)} />
-        <p className="text-primary">{this.state.response}</p>
         {this.state.showResults ? <UserAbout userAboutData={this.state.userAbout} /> : null}
         {this.state.showResults ? <UserOverview
           userOverviewData_Comments={this.state.userComments}

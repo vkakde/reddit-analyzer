@@ -23,7 +23,7 @@ class SearchBar extends Component {
         this.props.searchUser(this.state.searchQuery.searchQuery);
       });
     }
-    e.preventDefault();
+    //e.preventDefault();
   }
 
   render() {

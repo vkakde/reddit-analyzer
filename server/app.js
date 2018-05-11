@@ -39,4 +39,14 @@ app.get("/reddit/comments/:username", async (req, res) => {
   };
 });
 
+// this route serves reddit user's post history
+app.get("/reddit/posts/:username", async (req, res) => {
+  try {
+    var result = await API_helper_Reddit.getUserPosts(req.params.username);
+    res.send(result);
+  } catch (error) {
+    res.status(500).send();
+  };
+});
+
 app.listen(port, () => console.log(`Express server listening on port ${port}`));
