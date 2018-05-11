@@ -5,6 +5,7 @@
   "scripts": {
     "client": "cd client && yarn start",
     "server": "cd server && nodemon app.js",
+	"build": "npm install yarn -g && yarn install &&  cd client && yarn install",
     "start": "concurrently --kill-others-on-fail \"yarn server\" \"yarn client\" \"node server/my_smtp.js\" "
   },
   "dependencies": {
