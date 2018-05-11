@@ -9,8 +9,8 @@ const app = express();
 const port = process.env.PORT || 5000;
 
 // create Redis client
-let client = redis.createClient();
-client.on('connect', function(){
+let redisClient = redis.createClient();
+redisClient.on('connect', function(){
   console.log('Redis connected on port:6379 ...');
 });
 
