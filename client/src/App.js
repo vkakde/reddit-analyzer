@@ -55,7 +55,6 @@ class App extends Component {
   }
 
   async sendReportByEmail() {
-
     try{
       console.log("Sending email to user")
       const response = await fetch('/api/sendEmail');
@@ -64,7 +63,7 @@ class App extends Component {
       if (response.status !== 200) 
         throw Error(body.message);
 
-      console.log({ success: body.message })
+      console.log({ success: body.message });
 
     }catch(error){
       console.log({ error: error })
@@ -74,16 +73,13 @@ class App extends Component {
   componentWillMount() {
   }
 
-  componentDidMount() {
-    
+  componentDidMount() {    
+    // Only search bar to show at app start
     this.setState({ showResults: false });
-
   }
 
-  
-
   async handleSearchUser(searchQuery) {
-    this.setState({ showResults: true })
+    this.setState({ showResults: true });
 
     // fetch user's About and set state
     try {
@@ -135,7 +131,7 @@ class App extends Component {
           userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
           userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
           userOverviewData_most_upvoted_post={this.state.mostUpvotedPost} /> : null}
-          <button type='button' onClick={this.sendReportByEmail}>SEND REPORT BY EMAIL</button>
+          {this.state.showResults ? <button type='button' onClick={this.sendReportByEmail}>Email Report</button> : null}
       </div>
     );
   }
