@@ -1,5 +1,7 @@
-var express = require('express');
-var mySmtp = require('./my_smtp');
+const express = require('express');
+const mySmtp = require('./my_smtp')
+const redisConnection = require("./redis-connection");
+const nrpSender = require("./nrp-sender-shim");
 var API_helper_Reddit = require("./API-helper-reddit.js");
 
 var bluebird = require('bluebird');
@@ -14,13 +16,31 @@ redisClient.on('connect', function () {
   console.log('Redis connected on port:6379 ...');
 });
 
-// this route recieves email sending requests
-app.get('/api/sendEmail', (req, res) => {
-  let sent = mySmtp.sendEmail()
-  if (sent)
-    res.send({ express: "Email sent notification from express" })
+app.get('/api/sendEmail', async(req,res) => {
+
+  /*let sent = mySmtp.sendEmail()
+
+  if(sent)
+    res.send({ express: "Email sent notification from express"})
   else
-    res.send({ express: "Email sending failed: from express" })
+  res.send({ express: "Email sending failed: from express"})*/
+
+  try{
+    console.log("Route called")
+
+    let response = await nrpSender.sendMessage({
+        redis: redisConnection,
+        eventName: "sendEmail",
+        /*data: {
+            message: req.params.id
+        }*/
+    })
+
+    res.json(response)
+
+}catch(e){
+    res.json({ error: e.message });
+}
 })
 
 // this route serves reddit user's About

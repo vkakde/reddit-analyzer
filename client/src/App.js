@@ -38,8 +38,7 @@ class App extends Component {
       mostUpvotedComment: {},
       mostDownvotedComment: {},
       mostUpvotedPost: {},
-      mostDownvotedPost: {},
-      response: '' // state for express
+      mostDownvotedPost: {}
     };
   }
 
@@ -55,25 +54,33 @@ class App extends Component {
       });
   }
 
+  async sendReportByEmail() {
+
+    try{
+      console.log("Sending email to user")
+      const response = await fetch('/api/sendEmail');
+      const body = await response.json();
+  
+      if (response.status !== 200) 
+        throw Error(body.message);
+
+      console.log({ success: body.message })
+
+    }catch(error){
+      console.log({ error: error })
+    }
+  }
+
   componentWillMount() {
   }
 
   componentDidMount() {
+    
     this.setState({ showResults: false });
 
-    this.callApi()
-      .then(res => this.setState({ response: res.express }))
-      .catch(err => console.log(err));
   }
 
-  callApi = async () => {
-    const response = await fetch('/api/sendEmail');
-    const body = await response.json();
-
-    if (response.status !== 200) throw Error(body.message);
-
-    return body;
-  };
+  
 
   async handleSearchUser(searchQuery) {
     this.setState({ showResults: true })
@@ -93,26 +100,6 @@ class App extends Component {
       var searchResults_userComments = await fetch(`/reddit/comments/${searchQuery}`);
       searchResults_userComments = await searchResults_userComments.json();
       this.setState({ userComments: searchResults_userComments });
-
-      /*
-      var most_upvotes = 0,most_downvotes = searchResults_userComments[0].data.downs;
-      var most_upvoted_comment = {}
-      var most_downvoted_comment = searchResults_userComments[0].data
-
-      searchResults_userComments.forEach(element => {
-          if(element.data.ups > most_upvotes){
-              most_upvotes = element.data.ups
-              most_upvoted_comment = element.data
-          }
-          
-          if(element.data.downs < most_downvotes){
-            most_downvotes = element.data.downs
-            console.log("Downvotes was updated with "+most_downvotes)
-            most_downvoted_comment = element.data
-          }
-      });
-      console.log("Most downvotes are "+most_downvotes)
-      */
 
       var commentStats = dataFunctions.getVotesStats(searchResults_userComments)
       this.setState({ mostUpvotedComment: commentStats.upvoted })
@@ -148,6 +135,7 @@ class App extends Component {
           userOverviewData_most_upvoted_comment={this.state.mostUpvotedComment}
           userOverviewData_most_downvoted_post={this.state.mostDownvotedPost}
           userOverviewData_most_upvoted_post={this.state.mostUpvotedPost} /> : null}
+          <button type='button' onClick={this.sendReportByEmail}>SEND REPORT BY EMAIL</button>
       </div>
     );
   }
