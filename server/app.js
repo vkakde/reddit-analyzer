@@ -5,10 +5,9 @@ var API_helper_Reddit = require("./API-helper-reddit.js");
 const app = express();
 const port = process.env.PORT || 5000;
 
+// this route recieves email sending requests
 app.get('/api/sendEmail', (req, res) => {
-
   let sent = mySmtp.sendEmail()
-
   if (sent)
     res.send({ express: "Email sent notification from express" })
   else

@@ -37,7 +37,6 @@ let mailOptions = {
 });*/
 
 module.exports = {
-
     async sendEmail(){
         transporter.sendMail(mailOptions, (error, info) => {
             if (error) {
